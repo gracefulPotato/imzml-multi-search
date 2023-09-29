@@ -5,23 +5,26 @@ import pandas
 import json
 
 # Example usage:
-# python pyimzml\ code.py imzML\ files/CRP\ titration/230717_beads_tritration.imzML
+# python dict_code.py imzML\ files/CRP\ titration/230717_beads_tritration.imzML
 
 args = sys.argv[1:]
-if len(args) < 2:
-	print("Usage: python pyimzml\ code.py path/to/<file>.imzml path/to/<mass_list>.xlsx")
+if len(args) != 1:
+	print("Usage: python pyimzml\ code.py path/to/<file>.imzml")
 	exit(0)
 	
 filename = args[0]
-mass_list_file = args[1]
 
 p = ImzMLParser(filename)
 my_spectra = []
+all_intensities = []
 for idx, (x,y,z) in enumerate(p.coordinates):
     mzs, intensities = p.getspectrum(idx)
+    all_intensities.extend(intensities)
     my_spectra.append([mzs, intensities, (x, y, z)])
 print(my_spectra[0])
 print(len(my_spectra))
+average_intensity = sum(all_intensities)/len(all_intensities)
+print("Average abundance: "+str(average_intensity))
 
 stop=False
 

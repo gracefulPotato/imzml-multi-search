@@ -5,26 +5,13 @@ import pandas
 import json
 
 # Example usage:
-# python pyimzml\ code.py imzML\ files/CRP\ titration/230717_beads_tritration.imzML
-
+# python test_code.py imzML\ files/CRP\ titration/full_CRP_fragments.xlsx
 args = sys.argv[1:]
-if len(args) < 2:
-	print("Usage: python pyimzml\ code.py path/to/<file>.imzml path/to/<mass_list>.xlsx")
+if len(args) != 1:
+	print("Usage: python pyimzml\ code.py path/to/<mass_list>.xlsx")
 	exit(0)
 	
-filename = args[0]
-mass_list_file = args[1]
-
-
-
-p = ImzMLParser(filename)
-my_spectra = []
-for idx, (x,y,z) in enumerate(p.coordinates):
-    mzs, intensities = p.getspectrum(idx)
-    my_spectra.append([mzs, intensities, (x, y, z)])
-print(my_spectra[0])
-print(len(my_spectra))
-
+mass_list_file = args[0]
 
 with open('mass_dict.json') as json_file:
 	mass_dict = json.load(json_file)
@@ -116,8 +103,8 @@ for coordinate in hot_spots:
 	create_circle(canvas, coordinate[0], coordinate[1],2,color)
 	
 for i in coord_dict:
-	if len(coord_dict[i]) > max_len-5:
-		create_circle(canvas, i[0], i[1],15,"green1")
+	if len(coord_dict[i]) > max_len*2/3:
+		create_circle(canvas, i[0], i[1],10,"green1")
 		label_text = "("+str(i[0])+", "+str(i[1])+"): "+str(len(coord_dict[i]))+" sequences"
 		text_1 = tkinter.Label(text=label_text, bg='white', font=("Ariel", 12), fg='black')
 		text_1.place(x=i[0]+10, y=i[1]+10)
